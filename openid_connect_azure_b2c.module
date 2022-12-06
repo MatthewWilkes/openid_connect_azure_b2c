@@ -1,0 +1,20 @@
+<?php
+
+use Drupal\openid_connect\Entity\OpenIDConnectClientEntity;
+use Drupal\openid_connect_azure_b2c\Plugin\OpenIDConnectClient\OpenIDConnectB2CClient;
+
+/**
+ * Implements hook_openid_connect_userinfo_alter().
+ */
+function openid_connect_azure_b2c_openid_connect_userinfo_alter(array &$userinfo, array $context): void {
+
+  // Check if this is one of our plugins
+  $plugin = OpenIDConnectClientEntity::load($context['plugin_id'])?->getPlugin();
+  if (!$plugin instanceof OpenIDConnectB2CClient) {
+    return;
+  }
+
+  // Use the 0th email as the main one
+  $userinfo['email'] = $userinfo['emails'][0];
+}
+

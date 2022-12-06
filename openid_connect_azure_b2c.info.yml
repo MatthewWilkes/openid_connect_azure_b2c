@@ -1,0 +1,11 @@
+name: OpenID Connect Azure B2C
+description: This module adds a minimal Azure B2C client to OpenID Connect.
+package: Other
+
+dependencies:
+  - openid_connect:openid_connect
+  
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+
