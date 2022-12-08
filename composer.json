@@ -1,5 +1,5 @@
 {
-  "name": "drupal/openid_connect_azure_b2c",
+  "name": "matthewwilkes/openid_connect_azure_b2c",
   "type": "drupal-module",
   "description": "Azure B2C plugin for the OpenID Connect module.",
   "license": "GPL-2.0-or-later",
