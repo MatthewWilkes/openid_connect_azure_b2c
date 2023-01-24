@@ -1,20 +1,7 @@
 <?php
 
-use Drupal\Component\Serialization\Json;
 use Drupal\openid_connect\Entity\OpenIDConnectClientEntity;
 use Drupal\openid_connect_azure_b2c\Plugin\OpenIDConnectClient\OpenIDConnectB2CClient;
-
-
-function parseToken(string $token) {
-  $parts = explode('.', $token, 3);
-  if (count($parts) === 3) {
-    $decoded = Json::decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[1])));
-    if (is_array($decoded)) {
-      return $decoded;
-    }
-  }
-  return $token;
-}
 
 /**
  * Implements hook_openid_connect_userinfo_alter().
@@ -26,28 +13,7 @@ function openid_connect_azure_b2c_openid_connect_userinfo_alter(array &$userinfo
   if (!$plugin instanceof OpenIDConnectB2CClient) {
     return;
   }
-
-  // The email can be in multiple places, try and extract it from each in turn
-  $email = '';
-  if (array_key_exists('email', $userinfo)) {
-    // Prefer the email claim if present
-    $email = $userinfo['email'];
-  } elseif (array_key_exists('emails', $userinfo) && array_key_exists(0, $userinfo['emails'])) {
-    // If not, and there are alternate emails, use the first one
-    $email = $userinfo['emails'][0];
-  } elseif (array_key_exists('idp_access_token', $userinfo)) {
-
-    // If neither are present, but we have a proxied IdP token, extract data from that
-    $idp_userinfo = parseToken($userinfo['idp_access_token']);
-    if (array_key_exists('email', $idp_userinfo)) {
-      // Prefer email from the upstream token
-      $email = $idp_userinfo['email'];
-    } elseif (array_key_exists('upn', $idp_userinfo)) {
-      // but settle for the unique name
-      $email = $idp_userinfo['upn'];
-    }
-  }
-
-  $userinfo['email'] = $email;
+  
+  $userinfo['email'] = $plugin->extractEmail($userinfo);
 }
 
