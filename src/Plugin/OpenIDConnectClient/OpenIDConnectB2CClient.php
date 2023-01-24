@@ -88,7 +88,10 @@ class OpenIDConnectB2CClient extends OpenIDConnectClientBase {
   }
 
   /**
-   * Parse the token from upstream.
+   * Extract the data from a JWT without validation.
+   *
+   * @param string $token
+   *   A JWT in its head.body.sig format.
    */
   protected static function parseToken(string $token): array {
     $parts = explode('.', $token, 3);
@@ -103,9 +106,13 @@ class OpenIDConnectB2CClient extends OpenIDConnectClientBase {
 
   /**
    * Extract the email from various options within the token.
+   *
+   * @param array $userinfo
+   *   The extracted token contents as passed to the openid_connect
+   *   userinfo alter hook.
    */
   public static function extractEmail(array $userinfo) : string {
-    // The email can be in multiple places, try and extract it from each in turn.
+    // The email can be in multiple places, try to extract it from each in turn.
     $email = '';
     if (array_key_exists('email', $userinfo)) {
       // Prefer the email claim if present.
@@ -116,7 +123,8 @@ class OpenIDConnectB2CClient extends OpenIDConnectClientBase {
       $email = $userinfo['emails'][0];
     }
     elseif (array_key_exists('idp_access_token', $userinfo)) {
-      // If neither are present, but we have a proxied IdP token, extract data from that.
+      // If neither are present, but we have a proxied IdP token, extract
+      // data from that.
       $idp_userinfo = OpenIDConnectB2CClient::parseToken($userinfo['idp_access_token']);
       if (array_key_exists('email', $idp_userinfo)) {
         // Prefer email from the upstream token.
