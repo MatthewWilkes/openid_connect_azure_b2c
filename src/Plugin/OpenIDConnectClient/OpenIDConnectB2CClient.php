@@ -90,7 +90,7 @@ class OpenIDConnectB2CClient extends OpenIDConnectClientBase {
   /**
    * Parse the token from upstream.
    */
-  protected static function parseToken(string $token) {
+  protected static function parseToken(string $token): array {
     $parts = explode('.', $token, 3);
     if (count($parts) === 3) {
       $decoded = Json::decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[1])));
@@ -98,7 +98,7 @@ class OpenIDConnectB2CClient extends OpenIDConnectClientBase {
         return $decoded;
       }
     }
-    return $token;
+    return [];
   }
 
   /**
