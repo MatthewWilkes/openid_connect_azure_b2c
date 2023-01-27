@@ -13,8 +13,7 @@ function openid_connect_azure_b2c_openid_connect_userinfo_alter(array &$userinfo
   if (!$plugin instanceof OpenIDConnectB2CClient) {
     return;
   }
-
-  // Use the 0th email as the main one
-  $userinfo['email'] = $userinfo['emails'][0];
+  
+  $userinfo['email'] = $plugin->extractEmail($userinfo);
 }
 
