@@ -4,6 +4,6 @@
   "description": "Azure B2C plugin for the OpenID Connect module.",
   "license": "GPL-2.0-or-later",
   "require": {
-    "drupal/openid_connect": "^2.0@beta"
+    "drupal/openid_connect": "^2.0@beta || ^3.0@alpha"
   }
 }

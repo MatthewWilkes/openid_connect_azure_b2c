@@ -6,6 +6,4 @@ dependencies:
   - openid_connect:openid_connect
   
 type: module
-core: 8.x
-core_version_requirement: ^8 || ^9
-
+core_version_requirement: ^8 || ^9 || ^10
